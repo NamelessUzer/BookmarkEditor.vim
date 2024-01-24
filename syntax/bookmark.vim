@@ -1,0 +1,42 @@
+﻿" Vim syntax file
+" Language:	bookmark
+" Maintainer:	Lin Kun <Kun.Lin # qq.com>
+" Last Change:	2024 Jun 22
+
+
+if exists("b:current_syntax")
+  finish
+endif
+
+syntax clear
+
+" 定义书签不同层级的正则表达式匹配规则
+syntax match NonMain "^\s*\zs\(封皮\|封面\|书名\|扉页\|版权\|[总分]\?目录\|简目\|详目\|前言\|序言\?\|[前自再]序\|绪论\|编者的话\|作者简介\|附录\|索引\|附录\|封底\)页\?\ze\(\(\s\|[.⋯/／]\)*-\?\d\+\s*\)\?$"
+syntax match NonMain "^\s*\zs\(\d\{4}\s\?[年版]\?\)\(前言\|序言\?\)\ze\(\(\s\|[.⋯/／]\)*-\?\d\+\s*\)\?$"
+syntax match NonMain "^\s*\zs\(第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*版\)\(前言\|序言\?\)\ze\(\(\s\|[.⋯/／]\)*-\?\d\+\s*\)\?$"
+syntax match BookmarkPart "^\s*\zs第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*部分\?.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkSubpart "^\s*\zs第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*编.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkChapter "^\s*\zs第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*章.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkChapter "^\s*\zs专题\s*\([零一二三四五六七八九十百千万]\+\|\d+\).\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkSection "^\s*\zs第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*节.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkSubsection "^\s*\zs\([零一二三四五六七八九十百千万]\+\)、.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkItem "^\s*\zs第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*条.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkSubsection "^\s*\zs第\s*\([零一二三四五六七八九十百千万]\+\|\d+\)\s*小节\?.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkNumItem "^\s*\zs\(\d\+\.\)\+.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
+syntax match BookmarkPageNumber "\(\s\|[.⋯/／]\)*\zs-\?\d\+\ze\s*$"
+syntax match LinesLackingPageNumber "^\s*\zs.*\D\+$"
+
+" 定义颜色方案（基于Monokai配色方案）
+highlight NonMain                             ctermfg=208        guifg=#FD971F " Monokai橙色
+highlight BookmarkPart                        ctermfg=2          guifg=#A6E22E " 鲜绿
+highlight BookmarkSubpart                     ctermfg=10         guifg=#00FFFF " 亮青
+highlight BookmarkChapter                     ctermfg=17         guifg=#4184F3 " 亮蓝
+highlight BookmarkSection                     ctermfg=14         guifg=#89BD55 " 暗绿
+highlight BookmarkSubsection                  ctermfg=13         guifg=#DDA0DD " 浅紫
+highlight BookmarkItem                        ctermfg=3          guifg=#E6DB74 " 黄色
+highlight BookmarkNumItem                     ctermfg=1          guifg=#F92672 " 暗红
+" highlight link                                BookmarkPageNumber Number
+highlight BookmarkPageNumber ctermfg=5 guifg=#FF55FF " 亮紫/粉色
+highlight LinesLackingPageNumber              ctermbg=red        guibg=red " 红色
+
+let b:current_syntax = "bookmark"
