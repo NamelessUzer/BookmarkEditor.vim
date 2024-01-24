@@ -29,10 +29,10 @@ function! s:StructureContentText2Bookmark() range
   let subsectionLevel = ""
   let itemLevel = ""
   let numLevel = ""
-  " 默认部、部分、编、章、节、条的等级都是一级，即不需要缩进，如果发现存在上一级标题，就将其下所有等级的标题降一级；
+  " 默认卷、部、部分、编、章、节、条的等级都是一级，即不需要缩进，如果发现存在上一级标题，就将其下所有等级的标题降一级；
   " 例如，发现“部分、部、编”，就将“章”、“节”、“条”的标题等级降一级，同理，如果发现“章”，就将“节”、“条”的标题等级降一级
-  if match(l:lines, '^\(第[零一二三四五六七八九十百千万]\+部分\?\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第[零一二三四五六七八九十百千万]\\+部分\\?\\)\\s*", "' . partLevel    . '\\1 ", "")')
+  if match(l:lines, '^\(第[零一二三四五六七八九十百千万]\+\(部分\?\|卷)\)\s*') >= 0
+    call map(l:lines, 'substitute(v:val, "^\\(第[零一二三四五六七八九十百千万]\\+\\(部分\\?\\|卷\\)\\)\\s*", "' . partLevel    . '\\1 ", "")')
     let subPartLevel .= "\t"
     let chapterLevel .= "\t"
     let subsectionLevel .= "\t"
