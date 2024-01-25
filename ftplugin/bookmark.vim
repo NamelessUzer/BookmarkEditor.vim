@@ -3,6 +3,12 @@
 " Maintainer: Lin Kun <Kun.Lin # qq.com>
 " Last Change: 2024 Jun 25
 
+augroup filetype_bookmark
+    autocmd!
+    autocmd FileType bookmark setlocal noexpandtab
+    autocmd FileWritePre bookmark FormatBookmark
+augroup END
+
 function! s:FormatBookmark()
   silent! %s/ \{4}/\t/g
   silent! %s/^\s*第[零一二三四五六七八九十百千万]\+\(部分\?\|分\?编\|[章节条]\)\zs\s*/ /g
