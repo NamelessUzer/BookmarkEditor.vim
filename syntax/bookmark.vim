@@ -25,6 +25,8 @@ syntax match BookmarkSubsection "^\s*\zs第\s*\([零一二三四五六七八九�
 syntax match BookmarkNumItem "^\s*\zs\(\d\+\.\)\+.\{-}\ze\([.⋯\s/／]*-\?\d\+\s*\)$"
 syntax match BookmarkPageNumber "\(\s\|[.⋯/／]\)*\zs-\?\d\+\ze\s*$"
 syntax match LinesLackingPageNumber "^\s*\zs.*\D\+$"
+syntax match TypoWhiteSpace "\(^\|\t\)\zs[ 　]\+"
+syntax match TypoWhiteSpace "[ 　]\+\ze\t" " 正则似乎并没有问题，但是不能正常高亮制表符前的空格符号
 
 " 定义颜色方案（基于Monokai配色方案）
 highlight NonMain                             ctermfg=208        guifg=#FD971F " Monokai橙色
@@ -38,5 +40,6 @@ highlight BookmarkNumItem                     ctermfg=1          guifg=#F92672 "
 " highlight link                                BookmarkPageNumber Number
 highlight BookmarkPageNumber ctermfg=5 guifg=#FF55FF " 亮紫/粉色
 highlight LinesLackingPageNumber              ctermbg=red        guibg=red " 红色
+highlight TypoWhiteSpace ctermbg=DarkRed guibg=DarkRed " 暗红
 
 let b:current_syntax = "bookmark"
