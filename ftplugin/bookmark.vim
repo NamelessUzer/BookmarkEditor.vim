@@ -14,7 +14,7 @@ function! s:FormatBookmark()
   silent! %s/^\s*第[零一二三四五六七八九十百千万]\+\(部分\?\|分\?编\|[章节条]\)\zs\s*/ /g
   silent! %s/\(\s\|[.⋯/／]\)*\(-\?\d\+\)\s*$/\t\2/g
   silent! %s/\D\zs\s*\(-\?\)$/\t\1/g
-  silent! %s/[(（]\([^()（）]*[\x4e00-\u9fff]\+[^()（）]*\)[)）]/（\1）/g
+  silent! %s/[(（]\([^()（）]*[\u4E00-\u9FFF]\+[^()（）]*\)[)）]/（\1）/g
   silent! %s/[（(]\([-0-9a-zA-Z,:;.?!'; ]\+\)[)）]/(\1)/g
 endfunction
 function! s:StructureContentText2Bookmark() range
