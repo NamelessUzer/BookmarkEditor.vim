@@ -28,8 +28,8 @@ function! s:StructureContentText2Bookmark() range
   call filter(l:lines, 'strlen(v:val)')
   call map(l:lines, 'substitute(v:val, "\\(\\s\\|[.⋯/／]\\)*\\(-\\?\\d\\+\\)\\s*$", "\\t\\2", "")')
   " 章节标题与页码之间的分隔符号统一替换为一个Tab。
-  call map(l:lines, 'substitute(v:val, "[\\u4E00-\\u9FFF]\\zs\\s\\+\\ze[\u4E00-\\u9FFF]", "", "g")')
-  " 删除汉字之间的空白符号
+  call map(l:lines, 'substitute(v:val, "[\\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]\\zs\\s\\+\\ze[\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]", "", "g")')
+  " 删除汉字、全角标点之间的空白符号
   let partLevel = ""
   let subPartLevel = ""
   let chapterLevel = ""
