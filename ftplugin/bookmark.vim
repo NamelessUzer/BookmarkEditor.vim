@@ -56,8 +56,8 @@ function! s:StructureContentText2Bookmark() range
     let itemLevel .= "\t"
     let numLevel .= "\t"
   endif
-  if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)[章讲]\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)[章讲]\\)\\s*", "' . chapterLevel . '\\1 ", "")')
+  if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)\([章讲回]\|单元\)\)\s*') >= 0
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\([章讲回]\\|单元\\)\\)\\s*", "' . chapterLevel . '\\1 ", "")')
     let sectionLevel .= "\t"
     let subsectionLevel .= "\t"
     let itemLevel .= "\t"
