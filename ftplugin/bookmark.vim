@@ -10,6 +10,7 @@ augroup filetype_bookmark
 augroup END
 
 function! s:FormatBookmark()
+  silent! g/^\s\+$/d
   silent! %s/ \{4}/\t/g
   silent! %s/^\(\s*第\)\s*\([零一二三四五六七八九十百千万]\+\|\d\+\)\s*\(部分\?\|分\?编\|[章讲节条]\)\s*/\1\2\3 /g
   silent! %s/\(\s\|[.⋯/／]\)*\(-\?\d\+\)\s*$/\t\2/g
