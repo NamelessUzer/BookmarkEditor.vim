@@ -5,8 +5,10 @@
 
 augroup filetype_bookmark
     autocmd!
-    autocmd FileType bookmark setlocal noexpandtab
-    autocmd FileWritePre bookmark FormatBookmark
+    " autocmd FileType bookmark setlocal noexpandtab
+    " 上面这行配置会被覆盖，因而不够可靠使用下面这行更晚的事件来触发 setlocal noexpandtab，从而避免被覆盖
+    autocmd VimEnter,BufEnter *.bookmark setlocal noexpandtab
+    autocmd BufWritePre,FileWritePre *.bookmark FormatBookmark
 augroup END
 
 function! s:FormatBookmark()
