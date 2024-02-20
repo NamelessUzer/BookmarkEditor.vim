@@ -14,8 +14,8 @@ augroup END
 function! s:FormatBookmark()
   silent! g/^\s\+$/d _
   silent! %s/ \{4}/\t/ge
-  silent! %s/^\(\s*第\)\s*\([零一二三四五六七八九十百千万]\+\|\d\+\)\s*\(部分\?\|分\?编\|[章讲节条]\)\s*/\1\2\3 /ge
-  silent! %s/\(\s\|[.⋯/／]\)*\(-\?\d\+\)\s*$/\t\2/ge
+  silent! %s/^\(\s*第\)\s*\([零一二三四五六七八九十百千万]\+\|\d\+\)\s*\(部分\?\|分\?编\|小\?节\|\|[章讲条]\)\s*/\1\2\3 /ge
+  silent! %s/\%(\s\|[.⋯/／　]\)*\(-\?\d\+\(\s\/XYZ\(\s\d\+\(\.\d\+\)\?\)\{3}\)\?\)\s*$/\t\1/ge
   silent! %s/\D\zs\s*\(-\?\)$/\t\1/ge
   silent! %s/\(^\|\t\)\zs[ 　]\+\|[ 　]\+\ze\t//ge
   " 删除行首或制表符旁边的数量少于3个的空格，因为前文已经将4个空格替换为一个制表符，所以此处的空格数量不会大于3个，这样的空格通常是意外操作引起的，删除之。
@@ -29,7 +29,7 @@ function! s:StructureContentText2Bookmark() range
   call map(l:lines, 'substitute(v:val, "[ 　]\\+", " ", "g")')
   call map(l:lines, 'trim(v:val)')
   call filter(l:lines, 'strlen(v:val)')
-  call map(l:lines, 'substitute(v:val, "\\(\\s\\|[.⋯/／]\\)*\\(-\\?\\d\\+\\)\\s*$", "\\t\\2", "")')
+  call map(l:lines, 'substitute(v:val, "\\%(\\s\\|[.⋯/／　]\\)*\\(-\\?\\d\\+\\(\\s/XYZ\\(\\s\\d\\+\\(\\.\\d\\+\\)\\?\\)\\{3}\\)\\?\\)\\s*$", "\\t\\1", "ge")')
   " 章节标题与页码之间的分隔符号统一替换为一个Tab。
   call map(l:lines, 'substitute(v:val, "[\\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]\\zs\\s\\+\\ze[\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]", "", "g")')
   " 删除汉字、全角标点之间的空白符号
