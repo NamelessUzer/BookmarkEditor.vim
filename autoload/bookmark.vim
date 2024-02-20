@@ -91,7 +91,7 @@ function! bookmark#StructureContentText2Bookmark() range
   unlet l:unnamed
 endfunction
 
-function! bookmark#CopyPageNumber(mode)
+function! bookmark#CopyPageNumber(mode = 'normal')
   " 判断当前行是否是最后一行
   if line('.') == line('$')
     echo "This is the last line."
