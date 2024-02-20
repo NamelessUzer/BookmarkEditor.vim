@@ -102,3 +102,65 @@ command! -nargs=0 -range=% StructureContentText2Bookmark : <line1>,<line2>call <
 command! -nargs=0 FormatBookmark : <line1>,<line2>call <SID>FormatBookmark()
 nnoremap <silent> <Plug>StructureContentText2Bookmark    : StructureContentText2Bookmark<cr>
 nnoremap <silent> <Plug>FormatBookmark    : FormatBookmark<cr>
+
+function! s:CopyPageNumber(mode)
+    " 判断当前行是否是最后一行
+    if line('.') == line('$')
+        echo "This is the last line."
+        return
+    endif
+
+    " 保存当前光标位置
+    let l:curpos = getpos(".")
+    " 获取下一行的行号
+    let nextLineNum = line('.') + 1
+    " 获取下一行的内容
+    let nextLineContent = getline(nextLineNum)
+
+    " 使用分组优化正则，精确匹配页码和可选的XYZ坐标
+    if match(nextLineContent, '\v\s*(-?\d+)(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$') >= 0
+        " 提取精确的页码，避免误匹配坐标中的数字
+        let l:pageMatch = matchlist(nextLineContent, '\v\s*(-?\d+)(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$')
+        let l:pageNumber = l:pageMatch[1]
+
+        " 根据参数决定拷贝方式
+        if a:mode == 'normal'
+            " normal模式表示直接复制下一行中的页码，适用于章节标题不单独成页的情况
+            let pageNumberToCopy = pageNumber
+        elseif a:mode == 'minus_one'
+            " minus_one模式表示复制下一行中的页码并减1，适用于章节标题单独成页并布置在前一页的情况
+            let pageNumberToCopy = pageNumber - 1
+        elseif a:mode == 'last_odd'
+            " last_odd模式表示复制下一行中的页码并减1或2得到上一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
+            let pageNumberToCopy = pageNumber % 2 == 0 ? pageNumber - 1 : pageNumber - 2
+        else
+            echo "Invalid mode."
+            return
+        endif
+
+        " 使用:s命令修改当前行的页码为新页码
+        execute "normal! :s/\\v\\s*(-?\\d+)(\\s\\/XYZ(\\s\\d+(\\.\\d+)?){3})?\\s*$/\\t" . pageNumberToCopy . "/e\<CR>"
+    else
+        echo "No page number found in the next line."
+    endif
+
+    " 恢复光标到原始行，并尝试定位到页码末尾或行尾
+    call cursor(l:curpos[1], 1) " 移动到当前行的开始
+    let l:lineContent = getline('.')
+    let l:pageNumMatch = matchlist(l:lineContent, '\v\s*(-?\d+)(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$')
+    if len(l:pageNumMatch) > 0
+        " 如果当前行有页码，定位到页码末尾位置
+        let l:pageNumStartPos = match(l:lineContent, '\v\s*(-?\d+)(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$')
+        let l:pageNum = l:pageNumMatch[1]
+        let l:pageNumEndPos = l:pageNumStartPos + len(l:pageNum)
+        call cursor(l:curpos[1], l:pageNumEndPos + 1)
+    else
+        " 如果没有页码，定位到行尾
+        call cursor(l:curpos[1], col('$'))
+    endif
+endfunction
+
+" 映射快捷键，这里使用 gcn, gcm, gco
+nnoremap gcn :call <sid>CopyPageNumber('normal')<CR>
+nnoremap gcm :call <sid>CopyPageNumber('minus_one')<CR>
+nnoremap gco :call <sid>CopyPageNumber('last_odd')<CR>
