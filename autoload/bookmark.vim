@@ -26,44 +26,44 @@ function! bookmark#StructureContentText2Bookmark() range
   " 章节标题与页码之间的分隔符号统一替换为一个Tab。
   call map(l:lines, 'substitute(v:val, "[\\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]\\zs\\s\\+\\ze[\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]", "", "g")')
   " 删除汉字、全角标点之间的空白符号
-  let partLevel = ""
-  let subPartLevel = ""
-  let chapterLevel = ""
-  let sectionLevel = ""
-  let subsectionLevel = ""
-  let itemLevel = ""
-  let numLevel = ""
+  let partIndent = ""
+  let subPartIndent = ""
+  let chapterIndent = ""
+  let sectionIndent = ""
+  let subsectionIndent = ""
+  let itemIndent = ""
+  let numIndent = ""
   " 默认卷、部、部分、编、章、节、条的等级都是一级，即不需要缩进，如果发现存在上一级标题，就将其下所有等级的标题降一级；
   " 例如，发现“部分、部、编”，就将“章”、“节”、“条”的标题等级降一级，同理，如果发现“章”，就将“节”、“条”的标题等级降一级
   if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)\(部分\?\|卷\)\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\(部分\\?\\|卷\\)\\)\\s*", "' . partLevel    . '\\1 ", "")')
-    let subPartLevel .= "\t"
-    let chapterLevel .= "\t"
-    let subsectionLevel .= "\t"
-    let sectionLevel .= "\t"
-    let itemLevel .= "\t"
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\(部分\\?\\|卷\\)\\)\\s*", "' . partIndent    . '\\1 ", "")')
+    let subPartIndent .= "\t"
+    let chapterIndent .= "\t"
+    let subsectionIndent .= "\t"
+    let sectionIndent .= "\t"
+    let itemIndent .= "\t"
+    let numIndent .= "\t"
   endif
   if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)编\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)编\\)\\s*", "' . subPartLevel    . '\\1 ", "")')
-    let chapterLevel .= "\t"
-    let sectionLevel .= "\t"
-    let subsectionLevel .= "\t"
-    let itemLevel .= "\t"
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)编\\)\\s*", "' . subPartIndent    . '\\1 ", "")')
+    let chapterIndent .= "\t"
+    let sectionIndent .= "\t"
+    let subsectionIndent .= "\t"
+    let itemIndent .= "\t"
+    let numIndent .= "\t"
   endif
   if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)\([章讲回]\|单元\)\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\([章讲回]\\|单元\\)\\)\\s*", "' . chapterLevel . '\\1 ", "")')
-    let sectionLevel .= "\t"
-    let subsectionLevel .= "\t"
-    let itemLevel .= "\t"
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\([章讲回]\\|单元\\)\\)\\s*", "' . chapterIndent . '\\1 ", "")')
+    let sectionIndent .= "\t"
+    let subsectionIndent .= "\t"
+    let itemIndent .= "\t"
+    let numIndent .= "\t"
   elseif match(l:lines, '^\(专题\s*\([零一二三四五六七八九十百千万]\+\|\d\+\)\|\d\+\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(专题\\s*\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\|\\d\\+\\)\\s*", "' . chapterLevel . '\\1 ", "")')
-    let sectionLevel .= "\t"
-    let subsectionLevel .= "\t"
-    let itemLevel .= "\t"
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(专题\\s*\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)\\|\\d\\+\\)\\s*", "' . chapterIndent . '\\1 ", "")')
+    let sectionIndent .= "\t"
+    let subsectionIndent .= "\t"
+    let itemIndent .= "\t"
+    let numIndent .= "\t"
   endif
   let l:numPartPattern = '^\s*\(\d\+\(\.\d\+\)\+\)\s*'
   if match(l:lines, l:numPartPattern) >= 0
@@ -78,27 +78,27 @@ function! bookmark#StructureContentText2Bookmark() range
         let l:additional_indent = repeat("\t", len(split(l:number_part, '\.')) - 1)
         " 修正标题序号后的空格数量为一个
         let l:line = substitute(l:line, l:numPartPattern, '\1 ', '')
-        " 应用缩进（额外缩进 + sectionLevel）和修正过的行内容
-        let l:lines[l:index] = l:additional_indent . sectionLevel . l:line
+        " 应用缩进（额外缩进 + sectionIndent）和修正过的行内容
+        let l:lines[l:index] = l:additional_indent . sectionIndent . l:line
       endif
     endfor
   endif
   if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)小\?节\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)小\\?节\\)\\s*", "' . sectionLevel . '\\1 ", "")')
-    let subsectionLevel .= "\t"
-    let itemLevel .= "\t"
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)小\\?节\\)\\s*", "' . sectionIndent . '\\1 ", "")')
+    let subsectionIndent .= "\t"
+    let itemIndent .= "\t"
+    let numIndent .= "\t"
   endif
   if match(l:lines, '^\(\([零一二三四五六七八九十百千万]\+\|\d\+\)、\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)、\\)\\s*", "' . subsectionLevel . '\\1 ", "")')
-    let itemLevel .= "\t"
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)、\\)\\s*", "' . subsectionIndent . '\\1 ", "")')
+    let itemIndent .= "\t"
+    let numIndent .= "\t"
   endif
   if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)条\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)条\\(之[零一二三四五六七八九十百千]\\+\\)\\?\\)\\s*", "' . itemLevel . '\\1 ", "")')
-    let numLevel .= "\t"
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)条\\(之[零一二三四五六七八九十百千]\\+\\)\\?\\)\\s*", "' . itemIndent . '\\1 ", "")')
+    let numIndent .= "\t"
   endif
-  call map(l:lines, 'substitute(v:val, "^\\(\\(\\d\\+\\.\\)\\+\\d*\\)\\s*", "' . numLevel . '\\1 ", "")')
+  call map(l:lines, 'substitute(v:val, "^\\(\\(\\d\\+\\.\\)\\+\\d*\\)\\s*", "' . numIndent . '\\1 ", "")')
 
   execute("%delete")
   call setline(1, l:lines)
