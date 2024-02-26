@@ -66,7 +66,7 @@ function! bookmark#StructureContentText2Bookmark() range
     let itemIndent .= "\t"
     let numIndent .= "\t"
   endif
-  let l:numPartPattern = '^\s*\(\d\+\(\.\d\+\)\+\)\s*'
+  let l:numPartPattern = '^\(\d\+\(\.\d\+\)\+\)\s*'
   if match(l:lines, l:numPartPattern) >= 0
     for l:index in range(len(l:lines) - 1)
       " 提取当前行
@@ -80,7 +80,7 @@ function! bookmark#StructureContentText2Bookmark() range
         " 修正标题序号后的空格数量为一个
         let l:line = substitute(l:line, l:numPartPattern, '\1 ', '')
         " 应用缩进（额外缩进 + sectionIndent）和修正过的行内容
-        let l:lines[l:index] = l:additional_indent . sectionIndent . l:line
+        let l:lines[l:index] = l:additional_indent . chapterIndent . l:line
       endif
     endfor
   endif
