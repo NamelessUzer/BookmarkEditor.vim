@@ -6,7 +6,7 @@
 function! bookmark#FormatBookmark()
   silent! g/^\s\+$/d _
   silent! %s/ \{4}/\t/ge
-  silent! %s/^\(\s*第\)\s*\([零一二三四五六七八九十百千万]\+\|\d\+\)\s*\(部分\?\|分\?编\|小\?节\|[章讲条]\)\s*/\1\2\3 /ge
+  silent! %s/^\(第\)\s*\([零一二三四五六七八九十百千万]\+\|\d\+\)\s*\(部分\?\|分\?编\|小\?节\|[篇章讲条]\)\s*/\1\2\3 /ge
   silent! %s/\%(\s\|[.⋯/／　]\)*\(-\?\d\+\(\s\/XYZ\(\s\d\+\(\.\d\+\)\?\)\{3}\)\?\)\s*$/\t\1/ge
   silent! %s/\D\zs\s*\(-\?\)$/\t\1/ge
   silent! %s/\(^\|\t\)\zs[ 　]\+\|[ 　]\+\ze\t//ge
@@ -16,6 +16,7 @@ function! bookmark#FormatBookmark()
 endfunction
 
 function! bookmark#StructureContentText2Bookmark() range
+  call bookmark#FormatBookmark()
   let l:unnamed = getreg('"')
   let l:lines = getline(1, '$')
   call map(l:lines, 'trim(v:val)')
@@ -44,8 +45,8 @@ function! bookmark#StructureContentText2Bookmark() range
     let itemIndent .= "\t"
     let numIndent .= "\t"
   endif
-  if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)编\)\s*') >= 0
-    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)编\\)\\s*", "' . subPartIndent    . '\\1 ", "")')
+  if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)[篇编]\)\s*') >= 0
+    call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)[篇编]\\)\\s*", "' . subPartIndent    . '\\1 ", "")')
     let chapterIndent .= "\t"
     let sectionIndent .= "\t"
     let subsectionIndent .= "\t"
