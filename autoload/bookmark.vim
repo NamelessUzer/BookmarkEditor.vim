@@ -65,6 +65,24 @@ function! bookmark#StructureContentText2Bookmark() range
     let itemLevel .= "\t"
     let numLevel .= "\t"
   endif
+  let l:numPartPattern = '^\s*\(\d\+\(\.\d\+\)\+\)\s*'
+  if match(l:lines, l:numPartPattern) >= 0
+    for l:index in range(len(l:lines) - 1)
+      " 提取当前行
+      let l:line = l:lines[l:index]
+      " 计算点的数量，确定需要添加的额外缩进
+      if l:line =~ l:numPartPattern
+        " 提取序号部分
+        let l:number_part = matchstr(l:line, l:numPartPattern)
+        " 基于序号部分计算点的数量
+        let l:additional_indent = repeat("\t", len(split(l:number_part, '\.')) - 1)
+        " 修正标题序号后的空格数量为一个
+        let l:line = substitute(l:line, l:numPartPattern, '\1 ', '')
+        " 应用缩进（额外缩进 + sectionLevel）和修正过的行内容
+        let l:lines[l:index] = l:additional_indent . sectionLevel . l:line
+      endif
+    endfor
+  endif
   if match(l:lines, '^\(第\([零一二三四五六七八九十百千万]\+\|\d\+\)小\?节\)\s*') >= 0
     call map(l:lines, 'substitute(v:val, "^\\(第\\([零一二三四五六七八九十百千万]\\+\\|\\d\\+\\)小\\?节\\)\\s*", "' . sectionLevel . '\\1 ", "")')
     let subsectionLevel .= "\t"
