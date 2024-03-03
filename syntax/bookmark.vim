@@ -36,10 +36,12 @@ syntax match BookmarkPageXCoord "\/XYZ\s\zs\d\+\(\.\d\+\)\?\ze\s\d\+\(\.\d\+\)\?
 syntax match BookmarkPageYCoord "\d\+\(\.\d\+\)\?\ze\s\d\+\(\.\d\+\)\?$" contained nextgroup=BookmarkPageZCoord skipwhite
 " 匹配XYZ坐标中的Z部分
 syntax match BookmarkPageZCoord "\d\+\(\.\d\+\)\?$" contained
+
 " 修改后的页码匹配，避免匹配到带坐标的格式
 syntax match BookmarkPageNumberWithoutCoord "\(\s\|[.⋯/／]\)*\zs-\?\d\+\ze\s*$"
 
-syntax match LinesLackingPageNumber "^\s*\zs.*\D\+$"
+syntax match LinesLackingPageNumber '\v\s*\zs(-?\D+)\ze(\s?/XYZ(\s\d+(\.\d+)?){3})?\s*$'
+
 syntax match TypoWhiteSpace "\(^\|\t\)\zs[ 　]\+"
 syntax match TypoWhiteSpace "[ 　]\+\ze\t" " 正则似乎并没有问题，但是不能正常高亮制表符前的空格符号
 
