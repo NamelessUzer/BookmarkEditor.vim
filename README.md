@@ -32,11 +32,16 @@ Plug 'NamelessUzer/BookmarkEditor.vim'
 `:FormatBookmark`
 即可格式化目录文件，它可以改正一些常见的错误，例如，将 4 个空格替换为一个制表符，通常不需要运行，该命令会在文档保存时自动运行。
 
+运行如下命令
+`:CheckBookmark`
+即将错误在QuickFix窗口中列出，从而可以快速定义错误。
+
 您也可以将上述命令映射为您喜欢的快捷键，方便快捷操作，例如：
 
 ```VimScript
-nnoremap <localleader>sb <Plug>StructureContentText2Bookmar
-nnoremap <localleader>fb <Plug>FormatBookmark
+nnoremap <localleader>bs <Plug>StructureContentText2Bookmar
+nnoremap <localleader>bf <Plug>FormatBookmark
+nnoremap <localleader>bc CheckBookmark
 ```
 
 PDF 的目录中，有时章、节标题后会不带页码，它们的页码通常是承后一个书签中的页码，或者随后一个书签行所指向的页码的前一页，或者随后一个书签行所指向的页码的前一个奇数页。

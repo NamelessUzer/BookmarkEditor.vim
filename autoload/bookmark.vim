@@ -1,7 +1,7 @@
 ﻿" Vim ftplugin file
 " Language:	bookmark
 " Maintainer: Lin Kun <Kun.Lin # qq.com>
-" Last Change: 2024 Feb 20
+" Last Change: 2024 Mar 3
 
 function! bookmark#FormatBookmark()
   silent! g/^\s\+$/d _
@@ -168,29 +168,29 @@ function! bookmark#CopyPageNumber(mode = 'normal')
 endfunction
 
 function! bookmark#CheckBookmark()
-    call bookmark#FormatBookmark()
-    call setqflist([])
-    let lines = getline(1, '$')
-    let qf_list = []
+  call bookmark#FormatBookmark()
+  call setqflist([])
+  let lines = getline(1, '$')
+  let qf_list = []
 
-    for i in range(len(lines))
-        let line = lines[i]
+  for i in range(len(lines))
+    let line = lines[i]
 
-        for error_type in keys(g:bookmark_errors)
-            let error = g:bookmark_errors[error_type]
-            let colnr_end = matchend(line, error['pattern'])
-            if colnr_end != -1
-                let colnr_end = colnr_end + 1
-                call add(qf_list, {'filename': expand('%'), 'lnum': i + 1, 'col': colnr_end, 'text': error['description']})
-                break
-            endif
-        endfor
+    for error_type in keys(g:bookmark_errors)
+      let error = g:bookmark_errors[error_type]
+      let colnr_end = matchend(line, error['pattern'])
+      if colnr_end != -1
+        let colnr_end = colnr_end + 1
+        call add(qf_list, {'filename': expand('%'), 'lnum': i + 1, 'col': colnr_end, 'text': error['description']})
+        break
+      endif
     endfor
+  endfor
 
-    if !empty(qf_list)
-        call setqflist(qf_list)
-        copen
-    else
-        echo '未发现错误'
-    endif
+  if !empty(qf_list)
+    call setqflist(qf_list)
+    copen
+  else
+    echo '未发现错误'
+  endif
 endfunction
