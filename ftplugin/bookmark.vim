@@ -11,11 +11,6 @@ augroup filetype_bookmark
     autocmd BufWritePre,FileWritePre *.bookmark FormatBookmark
 augroup END
 
-" 定义错误类型和匹配规则
-let g:bookmark_errors = {
-\   'E001': {'pattern': '\v\s*(-?\D+)\ze(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$', 'description': '缺少页码'}
-\}
-
 command! -nargs=0 -range=% StructureContentText2Bookmark :<line1>,<line2>call bookmark#StructureContentText2Bookmark()
 command! -nargs=0 FormatBookmark : <line1>,<line2>call bookmark#FormatBookmark()
 nnoremap <silent> <Plug>StructureContentText2Bookmark    :StructureContentText2Bookmark<cr>
