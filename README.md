@@ -34,7 +34,7 @@ Plug 'NamelessUzer/BookmarkEditor.vim'
 
 运行如下命令
 `:CheckBookmark`
-即将错误在QuickFix窗口中列出，从而可以快速定义错误。
+即可将错误在 QuickFix 窗口中列出，从而可以快速定位错误。
 
 您也可以将上述命令映射为您喜欢的快捷键，方便快捷操作，例如：
 
@@ -44,7 +44,7 @@ nnoremap <localleader>bf <Plug>FormatBookmark
 nnoremap <localleader>bc CheckBookmark
 ```
 
-PDF 的目录中，有时章、节标题后会不带页码，它们的页码通常是承后一个书签中的页码，或者随后一个书签行所指向的页码的前一页，或者随后一个书签行所指向的页码的前一个奇数页。
+PDF 的目录中，有时章、节标题后会不带页码，它们的页码通常是随后一个书签中的页码，或者随后一个书签行所指向的页码的前一页，或者随后一个书签行所指向的页码的前一个奇数页。
 可以通过映射快捷键的方式解决，这里使用 gcn, gcm, gco 三个快捷键：
 
 ```VimScript
