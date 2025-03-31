@@ -42,7 +42,7 @@ syntax match BookmarkPageZCoord "\d\+\(\.\d\+\)\?$" contained
 syntax match BookmarkPageNumberWithoutCoord "\(\s\|[.⋯/／]\)*\zs-\?\d\+\ze\s*$"
 
 syntax match LinesLackingPageNumber '\v\s*\zs(-?\D+)\ze(\s?/XYZ(\s\d+(\.\d+)?){3})?\s*$'
-syntax match LinesHavingOnlyPageNumber '\v^\s*\zs(-?\d+)\ze(\s?/XYZ(\s\d+(\.\d+)?){3})?\s*$'
+syntax match LinesHavingOnlyPageNumber '\v^\s*\zs(-?\d+)\ze\s*$'
 
 syntax match TypoWhiteSpace "\(^\|\t\)\zs[ 　]\+"
 syntax match TypoWhiteSpace "[ 　]\+\ze\t" " 正则似乎并没有问题，但是不能正常高亮制表符前的空格符号
