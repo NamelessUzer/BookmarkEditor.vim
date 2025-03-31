@@ -170,7 +170,7 @@ endfunction
 " 定义错误类型和匹配规则
 let s:bookmarkErrors = {
 \   'E001': {'pattern': '\v\s*(-?\D+)\ze(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$', 'description': '缺少页码'}
-\   'E002': {'pattern': '\v^\s*\zs(-?\d+)\ze\s*$', 'description': '只有页码'}
+\  ,'E002': {'pattern': '\v^\s*\zs(-?\d+)\ze\s*$', 'description': '只有页码'}
 \}
 
 function! bookmark#CheckBookmark()
