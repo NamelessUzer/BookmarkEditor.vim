@@ -56,6 +56,10 @@ nnoremap gcm :call bookmark#CopyPageNumber('minus_one')<CR>
 " gcm 用于拷贝下一行中的页码并减 1 后粘贴到当前行
 nnoremap gco :call bookmark#CopyPageNumber('last_odd')<CR>
 " gco 用于将下一行的页码并计算其前一个奇数页码后粘贴到当前行。
+nnoremap gci :call bookmark#CopyPageNumber('increase_one)<CR>
+" gci 用于拷贝上一行中的页码并加 1 后粘贴到当前行
+nnoremap gca :call bookmark#CopyPageNumber('next_odd')<CR>
+" gca 用于将上一行的页码并计算其后一个奇数页码后粘贴到当前行。
 ```
 
-前述三个快捷键在粘贴页码到当前行时会先删除当前行已有的页码和坐标（若有）。
+前述五个快捷键在粘贴页码到当前行时会先删除当前行已有的页码和坐标（若有）。

@@ -111,45 +111,72 @@ function! bookmark#StructureContentText2Bookmark() range
 endfunction
 
 function! bookmark#CopyPageNumber(mode = 'normal')
-  " 判断当前行是否是最后一行
-  if line('.') == line('$')
-    echo "This is the last line."
-    return
-  endif
+  let l:nextLineModeList = ['normal', 'minus_one', 'last_odd']
+  let l:lastLineModeList = ['increase_one', 'next_odd']
+  let l:pageNumberPattern = '\v\s*\zs(-?\d+)\ze(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$'
 
   " 保存当前光标位置
   let l:curpos = getpos(".")
-  " 获取下一行的行号
-  let nextLineNum = line('.') + 1
-  " 获取下一行的内容
-  let nextLineContent = getline(nextLineNum)
 
-  " 使用分组优化正则，精确匹配页码和可选的XYZ坐标
-  if match(nextLineContent, '\v\s*(-?\d+)(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$') >= 0
-    " 提取精确的页码，避免误匹配坐标中的数字
-    let l:pageMatch = matchlist(nextLineContent, '\v\s*(-?\d+)(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$')
-    let l:pageNumber = l:pageMatch[1]
-
-    " 根据参数决定拷贝方式
-    if a:mode == 'normal'
-      " normal模式表示直接复制下一行中的页码，适用于章节标题不单独成页的情况
-      let pageNumberToCopy = pageNumber
-    elseif a:mode == 'minus_one'
-      " minus_one模式表示复制下一行中的页码并减1，适用于章节标题单独成页并布置在前一页的情况
-      let pageNumberToCopy = pageNumber - 1
-    elseif a:mode == 'last_odd'
-      " last_odd模式表示复制下一行中的页码并减1或2得到上一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
-      let pageNumberToCopy = pageNumber % 2 == 0 ? pageNumber - 1 : pageNumber - 2
-    else
-      echo "Invalid mode."
+  if index(l:nextLineModeList, a:mode) != -1
+    " 判断当前行是否是最后一行
+    if line('.') == line('$')
+      echo "This is the last line."
       return
     endif
-
-    " 使用:s命令修改当前行的页码为新页码
-    execute "normal! :s/\\v\\s*(-?\\d+)?(\\s\\/XYZ(\\s\\d+(\\.\\d+)?){3})?\\s*$/\\t" . pageNumberToCopy . "/e\<CR>"
+    " 获取下一行的行号
+    let nextLineNum = line('.') + 1
+    " 获取下一行的内容
+    let nextLineString = getline(nextLineNum)
+    " 获取下一行中的页码
+    let l:pageNumberInNextLine = matchstr(nextLineString, l:pageNumberPattern)
+    if empty(l:pageNumberInNextLine)
+      echo "No page number found in the next line."
+      return
+    else
+      " 根据参数决定拷贝方式
+      if a:mode == 'normal'
+        " normal模式表示直接复制下一行中的页码，适用于章节标题不单独成页的情况
+        let l:pageNumberToPaste = l:pageNumberInNextLine
+      elseif a:mode == 'minus_one'
+        " minus_one模式表示复制下一行中的页码并减1，适用于章节标题单独成页并布置在前一页的情况
+        let l:pageNumberToPaste = l:pageNumberInNextLine - 1
+      elseif a:mode == 'last_odd'
+        " last_odd模式表示复制下一行中的页码并减1或2得到上一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
+        let l:pageNumberToPaste = l:pageNumberInNextLine % 2 == 0 ? l:pageNumberInNextLine - 1 : l:pageNumberInNextLine - 2
+      endif
+    endif
+  elseif index(l:lastLineModeList, a:mode) != -1
+    if line('.') == 1
+      echo "This is the first line."
+      return
+    endif
+    " 获取上一行的行号
+    let lastLineNum = line('.') - 1
+    " 获取上一行的内容
+    let lastLineString = getline(lastLineNum)
+    " 获取上一行中的页码
+    let l:pageNumberInLastLine = matchstr(lastLineString, l:pageNumberPattern)
+    if empty(l:pageNumberInLastLine)
+      echo "No page number found in the last line."
+      return
+    else
+      " 根据参数决定拷贝方式
+      if a:mode == 'increase_one'
+        " minus_one模式表示复制下一行中的页码并加1，适用于章节标题单独成页的情况
+        let l:pageNumberToPaste = l:pageNumberInLastLine + 1
+      elseif a:mode == 'next_odd'
+        " last_odd模式表示复制下一行中的页码并加1或2得到下一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
+        let l:pageNumberToPaste = l:pageNumberInLastLine % 2 == 0 ? l:pageNumberInLastLine + 1 : l:pageNumberInLastLine + 2
+      endif
+    endif
   else
-    echo "No page number found in the next line."
+    echo "Invalid mode."
+    return
   endif
+
+  " 使用:s命令修改当前行的页码为新页码
+  execute "normal! :s/\\v\\s*(-?\\d+)?(\\s\\/XYZ(\\s\\d+(\\.\\d+)?){3})?\\s*$/\\t" . l:pageNumberToPaste . "/e\<CR>"
 
   " 恢复光标到原始行，并尝试定位到页码末尾或行尾
   call cursor(l:curpos[1], 1) " 移动到当前行的开始
