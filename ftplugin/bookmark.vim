@@ -18,7 +18,9 @@ nnoremap <silent> <Plug>FormatBookmark    :FormatBookmark<cr>
 
 command! -nargs=0 CheckBookmark :call bookmark#CheckBookmark()
 
-" 映射快捷键，这里使用 gcn, gcm, gco
+" 映射快捷键，这里使用 gcn, gcm, gco, gci, gca
 " nnoremap gcn :call bookmark#CopyPageNumber('normal')<CR>
 " nnoremap gcm :call bookmark#CopyPageNumber('minus_one')<CR>
 " nnoremap gco :call bookmark#CopyPageNumber('last_odd')<CR>
+" nnoremap gci :call bookmark#CopyPageNumber('increase_one')<CR>
+" nnoremap gca :call bookmark#CopyPageNumber('next_odd')<CR>
