@@ -1,7 +1,7 @@
 ﻿" Vim ftplugin file
 " Language:	bookmark
 " Maintainer: Lin Kun <Kun.Lin # qq.com>
-" Last Change: 2024 Mar 3
+" Last Change: 2025 May 20
 
 function! bookmark#FormatBookmark()
   silent! g/^\s\+$/d _
@@ -13,6 +13,9 @@ function! bookmark#FormatBookmark()
   " 删除行首或制表符旁边的数量少于3个的空格，因为前文已经将4个空格替换为一个制表符，所以此处的空格数量不会大于3个，这样的空格通常是意外操作引起的，删除之。
   silent! %s/[(（]\([^()（）]*[\u4E00-\u9FFF]\+[^()（）]*\)[)）]/（\1）/ge
   silent! %s/[（(]\([-0-9a-zA-Z,:;.?!'; ]\+\)[)）]/(\1)/ge
+
+  " 添加vim-repeat支持
+  silent! call repeat#set("\<Plug>(FormatBookmark)", v:count)
 endfunction
 
 function! bookmark#StructureContentText2Bookmark() range
@@ -108,11 +111,14 @@ function! bookmark#StructureContentText2Bookmark() range
   call setreg('"', l:unnamed)
   unlet l:lines
   unlet l:unnamed
+
+  " 添加vim-repeat支持
+  silent! call repeat#set("\<Plug>StructureContentText2Bookmark", v:count)
 endfunction
 
 function! bookmark#CopyPageNumber(mode = 'normal')
-  let l:nextLineModeList = ['normal', 'minus_one', 'last_odd']
-  let l:lastLineModeList = ['increase_one', 'next_odd']
+  let l:nextLineModeList = ['normal', 'minusOne', 'lastOdd']
+  let l:lastLineModeList = ['increaseOne', 'nextOdd']
   let l:pageNumberPattern = '\v\s*\zs(-?\d+)\ze(\s/XYZ(\s\d+(\.\d+)?){3})?\s*$'
 
   " 保存当前光标位置
@@ -138,11 +144,11 @@ function! bookmark#CopyPageNumber(mode = 'normal')
       if a:mode == 'normal'
         " normal模式表示直接复制下一行中的页码，适用于章节标题不单独成页的情况
         let l:pageNumberToPaste = l:pageNumberInNextLine
-      elseif a:mode == 'minus_one'
-        " minus_one模式表示复制下一行中的页码并减1，适用于章节标题单独成页并布置在前一页的情况
+      elseif a:mode == 'minusOne'
+        " minusOne模式表示复制下一行中的页码并减1，适用于章节标题单独成页并布置在前一页的情况
         let l:pageNumberToPaste = l:pageNumberInNextLine - 1
-      elseif a:mode == 'last_odd'
-        " last_odd模式表示复制下一行中的页码并减1或2得到上一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
+      elseif a:mode == 'lastOdd'
+        " lastOdd模式表示复制下一行中的页码并减1或2得到上一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
         let l:pageNumberToPaste = l:pageNumberInNextLine % 2 == 0 ? l:pageNumberInNextLine - 1 : l:pageNumberInNextLine - 2
       endif
     endif
@@ -162,11 +168,11 @@ function! bookmark#CopyPageNumber(mode = 'normal')
       return
     else
       " 根据参数决定拷贝方式
-      if a:mode == 'increase_one'
-        " minus_one模式表示复制下一行中的页码并加1，适用于章节标题单独成页的情况
+      if a:mode == 'increaseOne'
+        " increaseOne模式表示复制上一行中的页码并加1，适用于章节标题单独成页的情况
         let l:pageNumberToPaste = l:pageNumberInLastLine + 1
-      elseif a:mode == 'next_odd'
-        " last_odd模式表示复制下一行中的页码并加1或2得到下一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
+      elseif a:mode == 'nextOdd'
+        " nextOdd模式表示复制上一行的页码并加1或2得到下一个奇数页码，适用于章节标题单独成页并布置在奇数页的情况
         let l:pageNumberToPaste = l:pageNumberInLastLine % 2 == 0 ? l:pageNumberInLastLine + 1 : l:pageNumberInLastLine + 2
       endif
     endif
@@ -177,6 +183,10 @@ function! bookmark#CopyPageNumber(mode = 'normal')
 
   " 使用:s命令修改当前行的页码为新页码
   execute "normal! :s/\\v\\s*(-?\\d+)?(\\s\\/XYZ(\\s\\d+(\\.\\d+)?){3})?\\s*$/\\t" . l:pageNumberToPaste . "/e\<CR>"
+
+  " 注册可重复操作
+  let l:mode_camel = substitute(a:mode, '$\l$$\w*$', '\=toupper(submatch(1)) . submatch(2)', '')
+  silent! call repeat#set(printf("\<Plug>(BookmarkCopy%s)", l:mode_camel), v:count)
 
   " 恢复光标到原始行，并尝试定位到页码末尾或行尾
   call cursor(l:curpos[1], 1) " 移动到当前行的开始
@@ -224,4 +234,7 @@ function! bookmark#CheckBookmark()
   else
     echo '未发现错误'
   endif
+
+  " 添加vim-repeat支持
+  silent! call repeat#set("\<Plug>(CheckBookmark)", v:count)
 endfunction

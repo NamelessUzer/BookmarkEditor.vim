@@ -50,16 +50,20 @@ PDF 的目录中，有时章、节标题后会不带页码，它们的页码通�
 可以通过映射快捷键的方式解决，这里使用 gcn, gcm, gco 三个快捷键：
 
 ```VimScript
-nnoremap gcn :call bookmark#CopyPageNumber('normal')<CR>
-" gcn 用于拷贝下一行中的页码并粘贴至当前行
-nnoremap gcm :call bookmark#CopyPageNumber('minus_one')<CR>
-" gcm 用于拷贝下一行中的页码并减 1 后粘贴到当前行
-nnoremap gco :call bookmark#CopyPageNumber('last_odd')<CR>
-" gco 用于将下一行的页码并计算其前一个奇数页码后粘贴到当前行。
-nnoremap gci :call bookmark#CopyPageNumber('increase_one)<CR>
-" gci 用于拷贝上一行中的页码并加 1 后粘贴到当前行
-nnoremap gca :call bookmark#CopyPageNumber('next_odd')<CR>
-" gca 用于将上一行的页码并计算其后一个奇数页码后粘贴到当前行。
+nnoremap gcn <Plug>(BookmarkCopyNormal)
+" gcn 用于拷贝下一行中的页码并粘贴至当前行（适用于 normal 模式）
+
+nnoremap gcm <Plug>(BookmarkCopyMinusOne)
+" gcm 用于拷贝下一行中的页码并减 1 后粘贴到当前行（minusOne 模式）
+
+nnoremap gco <Plug>(BookmarkCopyLastOdd)
+" gco 用于将下一行的页码计算前一个奇数页码后粘贴到当前行（lastOdd 模式）
+
+nnoremap gci <Plug>(BookmarkCopyIncreaseOne)
+" gci 用于拷贝上一行中的页码并加 1 后粘贴到当前行（increaseOne 模式）
+
+nnoremap gca <Plug>(BookmarkCopyNextOdd)
+" gca 用于将上一行的页码计算后一个奇数页码后粘贴到当前行（nextOdd 模式）
 ```
 
 前述五个快捷键在粘贴页码到当前行时会先删除当前行已有的页码和坐标（若有）。
