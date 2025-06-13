@@ -26,6 +26,8 @@ function! bookmark#StructureContentText2Bookmark() range
   call map(l:lines, 'substitute(v:val, "[ 　]\\+", " ", "g")')
   call map(l:lines, 'trim(v:val)')
   call filter(l:lines, 'strlen(v:val)')
+  call map(l:lines, 'substitute(v:val, "\\s*[（()]\\s*\\(-\\?\\d\\+\\)\\s*[)）]\\s*$", "\\t\\1", "g")')
+  " 删除包裹行尾页码的圆括号。
   call map(l:lines, 'substitute(v:val, "\\%(\\s\\|[.·⋯…/／　]\\)*\\(-\\?\\d\\+\\(\\s/XYZ\\(\\s\\d\\+\\(\\.\\d\\+\\)\\?\\)\\{3}\\)\\?\\)\\s*$", "\\t\\1", "ge")')
   " 章节标题与页码之间的分隔符号统一替换为一个Tab。
   call map(l:lines, 'substitute(v:val, "[\\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]\\zs\\s\\+\\ze[\u4E00-\\u9FFF、，：；。？！‘’“”（）【】《》—]", "", "g")')
