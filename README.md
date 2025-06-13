@@ -41,9 +41,9 @@ Plug 'NamelessUzer/BookmarkEditor.vim'
 您也可以将上述命令映射为您喜欢的快捷键，方便快捷操作，例如：
 
 ```VimScript
-nnoremap <localleader>bs <Plug>StructureContentText2Bookmar
-nnoremap <localleader>bf <Plug>FormatBookmark
-nnoremap <localleader>bc CheckBookmark
+nnoremap <localleader>bs <Plug>(StructureContentText2Bookmark)
+nnoremap <localleader>bf <Plug>(FormatBookmark)
+nnoremap <localleader>bc <Plug>(CheckBookmark)
 ```
 
 PDF 的目录中，有时章、节标题后会不带页码，它们的页码通常是随后一个书签中的页码，或者随后一个书签行所指向的页码的前一页，或者随后一个书签行所指向的页码的前一个奇数页。
